@@ -46,17 +46,17 @@ func runVmTests(t *testing.T, tests []vmTestCase) {
 			t.Fatalf("compiler error: %s", err)
 		}
 
-		for i, constant := range comp.Bytecode().Constants {
-			fmt.Printf("CONSTANT %d %p (%T):\n", i, constant, constant)
+		// for i, constant := range comp.Bytecode().Constants {
+		// 	fmt.Printf("CONSTANT %d %p (%T):\n", i, constant, constant)
 
-			switch constant := constant.(type) {
-			case *object.CompiledFunction:
-				fmt.Printf(" Instructions:\n%s", constant.Instructions)
-			case *object.Integer:
-				fmt.Printf(" Value: %d\n", constant.Value)
-			}
-			fmt.Println()
-		}
+		// 	switch constant := constant.(type) {
+		// 	case *object.CompiledFunction:
+		// 		fmt.Printf(" Instructions:\n%s", constant.Instructions)
+		// 	case *object.Integer:
+		// 		fmt.Printf(" Value: %d\n", constant.Value)
+		// 	}
+		// 	fmt.Println()
+		// }
 
 		vm := New(comp.Bytecode())
 		err = vm.Run()
@@ -724,6 +724,10 @@ func TestRecursiveFunctions(t *testing.T) {
 			wrapper();
 			`,
 			expected: 0,
+		},
+		{
+			input:    "let fib=fn(x){if(x==0){0}else{if(x==1){1}else{fib(x-1)+fib(x-2)}}};fib(15)",
+			expected: 610,
 		},
 	}
 	runVmTests(t, tests)
